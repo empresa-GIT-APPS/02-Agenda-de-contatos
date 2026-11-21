@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prosa Code — Agenda de Contatos (Pixel Art 16-bit)</title>
+    
+    <!-- Tailwind CSS CDN para estilização responsiva -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: VT323 e Press Start 2P para estética retrô 16-bit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==========================================================================
+           PALETA OFICIAL PROSA CODE & ESTILOS PIXEL ART 16-BIT
+           - Roxo Profundo: #27081D (Bordas, textos de alto contraste, sombras)
+           - Vinho Madeira: #47232C (Cabeçalho, botões primários, badges Trabalho/Família)
+           - Verde Muted:   #66997B (Sidebar, badge Amigos, pílulas de contagem)
+           - Verde Suave:   #A4CA8B (Inputs, botões secundários, filtros, índice A-H)
+           - Verde Pastel:  #D2E7AA (Fundo principal, cartões de contato)
+           ========================================================================== */
+
+        :root {
+            --roxo-profundo: #27081D;
+            --vinho-madeira: #47232C;
+            --verde-muted:   #66997B;
+            --verde-suave:   #A4CA8B;
+            --verde-pastel:  #D2E7AA;
+        }
+
+        body {
+            background-color: var(--roxo-profundo);
+            color: var(--roxo-profundo);
+            font-family: 'VT323', monospace;
+            font-size: 1.25rem;
+            image-rendering: pixelated;
+            user-select: none;
+        }
+
+        .font-pixel-title {
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        /* Bordas e Sombras em Bloco Estilo Pixel Art */
+        .pixel-border {
+            border: 4px solid var(--roxo-profundo);
+            box-shadow: 4px 4px 0px var(--roxo-profundo);
+        }
+
+        .pixel-border-sm {
+            border: 3px solid var(--roxo-profundo);
+            box-shadow: 2px 2px 0px var(--roxo-profundo);
+        }
+
+        .pixel-card {
+            background-color: var(--verde-pastel);
+            border: 3px solid var(--roxo-profundo);
+            box-shadow: 4px 4px 0px var(--roxo-profundo);
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+        }
+
+        .pixel-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 6px 6px 0px var(--roxo-profundo);
+        }
+
+        /* Estilo dos Botões */
+        .pixel-btn-primary {
+            background-color: var(--vinho-madeira);
+            color: var(--verde-pastel);
+            border: 3px solid var(--roxo-profundo);
+            box-shadow: 3px 3px 0px var(--roxo-profundo);
+            cursor: pointer;
+            transition: all 0.08s ease;
+        }
+
+        .pixel-btn-primary:hover {
+            background-color: #5a2e38;
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0px var(--roxo-profundo);
+        }
+
+        .pixel-btn-primary:active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px var(--roxo-profundo);
+        }
+
+        .pixel-btn-secondary {
+            background-color: var(--verde-suave);
+            color: var(--roxo-profundo);
+            border: 3px solid var(--roxo-profundo);
+            box-shadow: 3px 3px 0px var(--roxo-profundo);
+            cursor: pointer;
+            transition: all 0.08s ease;
+        }
+
+        .pixel-btn-secondary:hover {
+            background-color: #b5d89d;
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0px var(--roxo-profundo);
+        }
+
+        .pixel-btn-secondary:active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px var(--roxo-profundo);
+        }
+
+        /* Botões do Índice Alfabético */
+        .pixel-badge-nav {
+            background-color: var(--verde-suave);
+            color: var(--roxo-profundo);
+            border: 2px solid var(--roxo-profundo);
+            box-shadow: 2px 2px 0px var(--roxo-profundo);
+            cursor: pointer;
+            transition: all 0.08s ease;
+        }
+
+        .pixel-badge-nav:hover, .pixel-badge-nav.active {
+            background-color: var(--vinho-madeira);
+            color: var(--verde-pastel);
+        }
+
+        /* Barra de Rolagem Customizada */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--verde-suave);
+            border-left: 3px solid var(--roxo-profundo);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--vinho-madeira);
+            border: 2px solid var(--roxo-profundo);
+        }
+
+        /* Sobreposição Sutil de Scanlines CRT */
+        .crt-overlay {
+            background: linear-gradient(
+                rgba(18, 16, 16, 0) 50%, 
+                rgba(0, 0, 0, 0.04) 50%
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+        }
+
+        /* Inputs Estilizados */
+        .pixel-input {
+            background-color: var(--verde-suave);
+            color: var(--roxo-profundo);
+            border: 3px solid var(--roxo-profundo);
+            outline: none;
+            box-shadow: inset 2px 2px 0px rgba(39, 8, 29, 0.3);
+        }
+
+        .pixel-input:focus {
+            background-color: var(--verde-pastel);
+            border-color: var(--vinho-madeira);
+        }
+    </style>
+</head>
+<body class="min-h-screen p-2 sm:p-4 md:p-6 flex flex-col justify-between relative overflow-x-hidden">
+
+    <!-- Efeito de Scanline CRT (não bloqueia cliques) -->
+    <div class="fixed inset-0 crt-overlay z-50"></div>
+
+    <!-- JANELA PRINCIPAL SIMULANDO JAVAFX -->
+    <div class="max-w-6xl mx-auto w-full bg-[#D2E7AA] pixel-border relative z-10 my-auto flex flex-col overflow-hidden">
+
+        <!-- BARRA DE TÍTULO DA JANELA -->
+        <div class="bg-[#27081D] text-[#D2E7AA] px-4 py-2 flex justify-between items-center text-sm font-pixel-title border-b-4 border-[#27081D]">
+            <div class="flex items-center gap-2">
+                <!-- Ícone Pixel Art de Xícara de Café -->
+                <svg width="20" height="20" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M2 4H12V11C12 12.1 11.1 13 10 13H4C2.9 13 2 12.1 2 11V4Z" fill="#A4CA8B"/>
+                    <path d="M12 5H14C14.6 5 15 5.4 15 6V8C15 8.6 14.6 9 14 9H12V5Z" fill="#A4CA8B"/>
+                    <path d="M4 2H10V3H4V2Z" fill="#66997B"/>
+                </svg>
+                <span class="text-[10px] sm:text-xs tracking-wider truncate">Prosa Code - 02-agenda-contatos.fxml</span>
+            </div>
+            <!-- Controles da Janela -->
+            <div class="flex gap-1.5 shrink-0">
+                <button type="button" onclick="mostrarToast('Janela minimizada (simulação)')" class="w-5 h-5 bg-[#66997B] border border-[#D2E7AA] text-[#27081D] text-xs font-bold flex items-center justify-center hover:bg-[#A4CA8B]">_</button>
+                <button type="button" onclick="mostrarToast('Modo janela alternado (simulação)')" class="w-5 h-5 bg-[#A4CA8B] border border-[#27081D] text-[#27081D] text-xs font-bold flex items-center justify-center hover:bg-[#D2E7AA]">口</button>
+                <button type="button" onclick="mostrarToast('Use o botão Fechar do navegador para sair')" class="w-5 h-5 bg-[#47232C] border border-[#D2E7AA] text-[#D2E7AA] text-xs font-bold flex items-center justify-center hover:bg-red-700">X</button>
+            </div>
+        </div>
+
+        <!-- CABEÇALHO DA APLICAÇÃO -->
+        <header class="bg-[#47232C] p-4 border-b-4 border-[#27081D] text-[#D2E7AA] relative overflow-hidden">
+            <!-- Decoração Botânica de Fundo -->
+            <div class="absolute -right-4 -top-4 opacity-20 pointer-events-none text-[#66997B]">
+                <svg width="120" height="120" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M17,8C8,10 5,16 3,21C8,21 14,18 16,14C17,12 17,10 17,8M3,3C5,8 10,12 16,13C18,10 18,6 18,3C13,3 8,5 3,3Z"/>
+                </svg>
+            </div>
+
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4 relative z-10">
+                <!-- Título e Ícone de Livros Empilhados -->
+                <div class="flex items-center gap-3 w-full md:w-auto">
+                    <div class="bg-[#27081D] p-2 pixel-border-sm flex items-center justify-center shrink-0">
+                        <svg width="36" height="36" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <rect x="2" y="11" width="12" height="3" fill="#A4CA8B"/>
+                            <rect x="1" y="11" width="2" height="3" fill="#66997B"/>
+                            <rect x="3" y="12" width="10" height="1" fill="#27081D"/>
+                            <rect x="3" y="7" width="11" height="3" fill="#D2E7AA"/>
+                            <rect x="2" y="7" width="2" height="3" fill="#66997B"/>
+                            <rect x="4" y="8" width="9" height="1" fill="#27081D"/>
+                            <rect x="2" y="3" width="10" height="3" fill="#A4CA8B"/>
+                            <rect x="1" y="3" width="2" height="3" fill="#47232C"/>
+                            <rect x="3" y="4" width="8" height="1" fill="#27081D"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-lg sm:text-2xl font-pixel-title text-[#D2E7AA] drop-shadow-[2px_2px_0px_#27081D] leading-snug">
+                            Agenda de Contatos
+                        </h1>
+                        <p class="text-xs sm:text-sm text-[#A4CA8B] tracking-wide mt-1">
+                            Módulo 02 • Agenda Pessoal Prosa Code
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Barra de Busca -->
+                <div class="w-full md:w-auto flex-1 max-w-md">
+                    <div class="relative flex items-center">
+                        <span class="absolute left-3 text-xl text-[#27081D]">🔍</span>
+                        <input 
+                            type="text" 
+                            id="searchInput" 
+                            placeholder="Buscar por nome, telefone ou tag..." 
+                            class="w-full pl-10 pr-9 py-2 pixel-input text-lg font-bold placeholder-[#47232C]/60"
+                            oninput="filtrarContatos()"
+                        >
+                        <button 
+                            type="button"
+                            id="clearSearch"
+                            onclick="limparBusca()" 
+                            class="hidden absolute right-2 text-xs bg-[#47232C] text-[#D2E7AA] px-2 py-1 border border-[#27081D] cursor-pointer"
+                            title="Limpar busca"
+                        >
+                            X
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- CORPO PRINCIPAL (SIDEBAR + ÁREA DE CONTEÚDO) -->
+        <div class="flex flex-col md:flex-row flex-1 bg-[#D2E7AA]">
+
+            <!-- BARRA LATERAL ESQUERDA -->
+            <aside class="w-full md:w-64 bg-[#66997B]/30 p-4 border-b-4 md:border-b-0 md:border-r-4 border-[#27081D] flex flex-col justify-between gap-6 shrink-0">
+                
+                <div class="space-y-6">
+                    <!-- Botão Principal: Novo Contato -->
+                    <button 
+                        type="button"
+                        onclick="abrirModalNovoContato()" 
+                        class="w-full py-3 px-4 pixel-btn-primary font-pixel-title text-xs flex items-center justify-center gap-2"
+                    >
+                        <span class="text-lg leading-none">+</span> Novo Contato
+                    </button>
+
+                    <!-- Filtros de Categorias -->
+                    <div>
+                        <h2 class="text-xs font-pixel-title text-[#27081D] mb-3 uppercase flex items-center gap-2">
+                            <span>📁</span> Categorias
+                        </h2>
+                        <ul class="space-y-1.5 text-lg font-bold">
+                            <li>
+                                <button type="button" onclick="filtrarCategoria('todos')" id="cat-todos" class="cat-btn w-full text-left px-3 py-1.5 border-2 border-[#27081D] bg-[#27081D] text-[#D2E7AA] flex justify-between items-center cursor-pointer">
+                                    <span>📖 Todos</span>
+                                    <span id="count-todos" class="text-xs bg-[#A4CA8B] text-[#27081D] px-1.5 py-0.5 font-mono">6</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button" onclick="filtrarCategoria('favoritos')" id="cat-favoritos" class="cat-btn w-full text-left px-3 py-1.5 border-2 border-[#27081D] bg-[#A4CA8B] text-[#27081D] hover:bg-[#27081D] hover:text-[#D2E7AA] flex justify-between items-center cursor-pointer">
+                                    <span>⭐ Favoritos</span>
+                                    <span id="count-favoritos" class="text-xs bg-[#27081D] text-[#D2E7AA] px-1.5 py-0.5 font-mono">2</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button" onclick="filtrarCategoria('Amigos')" id="cat-amigos" class="cat-btn w-full text-left px-3 py-1.5 border-2 border-[#27081D] bg-[#A4CA8B] text-[#27081D] hover:bg-[#27081D] hover:text-[#D2E7AA] flex justify-between items-center cursor-pointer">
+                                    <span>👥 Amigos</span>
+                                    <span id="count-amigos" class="text-xs bg-[#27081D] text-[#D2E7AA] px-1.5 py-0.5 font-mono">2</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button" onclick="filtrarCategoria('Família')" id="cat-familia" class="cat-btn w-full text-left px-3 py-1.5 border-2 border-[#27081D] bg-[#A4CA8B] text-[#27081D] hover:bg-[#27081D] hover:text-[#D2E7AA] flex justify-between items-center cursor-pointer">
+                                    <span>🏡 Família</span>
+                                    <span id="count-familia" class="text-xs bg-[#27081D] text-[#D2E7AA] px-1.5 py-0.5 font-mono">2</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button" onclick="filtrarCategoria('Trabalho')" id="cat-trabalho" class="cat-btn w-full text-left px-3 py-1.5 border-2 border-[#27081D] bg-[#A4CA8B] text-[#27081D] hover:bg-[#27081D] hover:text-[#D2E7AA] flex justify-between items-center cursor-pointer">
+                                    <span>💼 Trabalho</span>
+                                    <span id="count-trabalho" class="text-xs bg-[#27081D] text-[#D2E7AA] px-1.5 py-0.5 font-mono">2</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Índice Rápido por Letra -->
+                    <div>
+                        <h2 class="text-xs font-pixel-title text-[#27081D] mb-3 uppercase flex items-center gap-2">
+                            <span>🔤</span> Índice por Letra
+                        </h2>
+                        <div class="grid grid-cols-4 gap-1.5">
+                            <button type="button" onclick="filtrarLetra('A')" class="letra-btn pixel-badge-nav py-1 font-bold text-center">A</button>
+                            <button type="button" onclick="filtrarLetra('B')" class="letra-btn pixel-badge-nav py-1 font-bold text-center">B</button>
+                            <button type="button" onclick="filtrarLetra('C')" class="letra-btn pixel-badge-nav py-1 font-bold text-center">C</button>
+                            <button type="button" onclick="filtrarLetra('D')" class="letra-btn pixel-badge-nav py-1 font-bold text-center">D</button>
+                            <button type="button" onclick="filtrarLetra('E')" class="letra-btn pixel-badge-nav py-1 font-bold text-center opacity-50">E</button>
+                            <button type="button" onclick="filtrarLetra('F')" class="letra-btn pixel-badge-nav py-1 font-bold text-center opacity-50">F</button>
+                            <button type="button" onclick="filtrarLetra('G')" class="letra-btn pixel-badge-nav py-1 font-bold text-center opacity-50">G</button>
+                            <button type="button" onclick="filtrarLetra('H')" class="letra-btn pixel-badge-nav py-1 font-bold text-center opacity-50">H</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Selo Institucional na Base da Sidebar -->
+                <div class="bg-[#27081D] text-[#A4CA8B] p-2.5 text-center text-xs border-2 border-[#47232C]">
+                    <p class="font-pixel-title text-[9px] text-[#D2E7AA]">PROSA CODE POO</p>
+                    <p class="text-sm mt-0.5">Versão JavaFX 2.0 • 2026</p>
+                </div>
+
+            </aside>
+
+            <!-- ÁREA DIREITA: LISTA DE CONTATOS -->
+            <main class="flex-1 p-4 sm:p-6 overflow-y-auto max-h-[650px]">
+                
+                <!-- Barra de Status do Filtro Ativo -->
+                <div class="flex flex-wrap items-center justify-between gap-2 pb-3 mb-4 border-b-2 border-[#27081D]">
+                    <div class="flex items-center gap-2">
+                        <span class="font-pixel-title text-[10px] sm:text-xs text-[#47232C]" id="activeFilterTitle">EXIBINDO: TODOS OS CONTATOS</span>
+                    </div>
+                    <span class="text-sm font-bold bg-[#66997B] text-[#27081D] px-2.5 py-0.5 border-2 border-[#27081D]" id="resultsCount">6 registro(s)</span>
+                </div>
+
+                <!-- Container dos Grupos Alfabéticos -->
+                <div id="contactsListContainer" class="space-y-6"></div>
+
+                <!-- Estado Vazio (Quando nenhum contato corresponde ao filtro) -->
+                <div id="emptyState" class="hidden text-center py-12 border-4 border-dashed border-[#27081D] p-6 bg-[#A4CA8B]/30 my-6">
+                    <p class="text-2xl font-bold text-[#47232C] mb-2">🔎 Nenhum contato encontrado!</p>
+                    <p class="text-lg text-[#27081D]">Tente ajustar sua busca ou selecione outra categoria/letra.</p>
+                    <button type="button" onclick="resetarFiltros()" class="mt-4 px-4 py-2 pixel-btn-primary text-xs font-pixel-title">
+                        Limpar Filtros
+                    </button>
+                </div>
+
+            </main>
+        </div>
+
+        <!-- BARRA DE RODAPÉ -->
+        <footer class="bg-[#27081D] text-[#A4CA8B] px-4 py-2 border-t-4 border-[#27081D] flex flex-col sm:flex-row justify-between items-center text-xs sm:text-sm font-mono gap-1">
+            <div>
+                <span>☕ Status: Banco de Dados Conectado (MySQL Local)</span>
+            </div>
+            <div class="flex flex-wrap justify-center gap-2 sm:gap-4 text-center">
+                <span>IFCE Campus Maranguape</span>
+                <span>•</span>
+                <span>Prof. Roger Moura Sarmento</span>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- ==========================================================================
+         MODAL 1: DETALHES DO CONTATO
+         ========================================================================== -->
+    <div id="modalDetalhes" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-[#D2E7AA] pixel-border max-w-md w-full overflow-hidden relative">
+            <div class="bg-[#47232C] text-[#D2E7AA] px-4 py-3 border-b-4 border-[#27081D] flex justify-between items-center">
+                <h3 class="font-pixel-title text-xs flex items-center gap-2">
+                    <span>🎴</span> Detalhes do Contato
+                </h3>
+                <button type="button" onclick="fecharModal('modalDetalhes')" class="w-6 h-6 bg-[#27081D] text-[#D2E7AA] font-bold border border-[#A4CA8B] hover:bg-red-800 flex items-center justify-center cursor-pointer">X</button>
+            </div>
+
+            <div class="p-6 space-y-4 text-[#27081D]" id="modalDetalhesBody"></div>
+
+            <div class="bg-[#66997B]/40 p-4 border-t-4 border-[#27081D] flex justify-end gap-3">
+                <button type="button" onclick="fecharModal('modalDetalhes')" class="px-4 py-2 pixel-btn-secondary text-xs font-pixel-title">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         MODAL 2: CADASTRAR NOVO CONTATO
+         ========================================================================== -->
+    <div id="modalNovoContato" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-[#D2E7AA] pixel-border max-w-lg w-full overflow-hidden relative">
+            <div class="bg-[#27081D] text-[#D2E7AA] px-4 py-3 border-b-4 border-[#27081D] flex justify-between items-center">
+                <h3 class="font-pixel-title text-xs flex items-center gap-2">
+                    <span>➕</span> Cadastrar Novo Contato
+                </h3>
+                <button type="button" onclick="fecharModal('modalNovoContato')" class="w-6 h-6 bg-[#47232C] text-[#D2E7AA] font-bold border border-[#A4CA8B] hover:bg-red-800 flex items-center justify-center cursor-pointer">X</button>
+            </div>
+
+            <form id="formNovoContato" onsubmit="salvarNovoContato(event)" class="p-6 space-y-4 text-[#27081D]">
+                <div>
+                    <label for="novoNome" class="block font-pixel-title text-[10px] mb-1">NOME COMPLETO *</label>
+                    <input type="text" id="novoNome" required placeholder="Ex: Carlos Drummond" class="w-full p-2 pixel-input text-lg font-bold">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label for="novoTelefone" class="block font-pixel-title text-[10px] mb-1">TELEFONE *</label>
+                        <input type="text" id="novoTelefone" required placeholder="(85) 99999-0000" class="w-full p-2 pixel-input text-lg font-bold">
+                    </div>
+                    <div>
+                        <label for="novoTag" class="block font-pixel-title text-[10px] mb-1">CATEGORIA / TAG *</label>
+                        <select id="novoTag" class="w-full p-2 pixel-input text-lg font-bold">
+                            <option value="Amigos">Amigos</option>
+                            <option value="Família">Família</option>
+                            <option value="Trabalho">Trabalho</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="novoEmail" class="block font-pixel-title text-[10px] mb-1">E-MAIL</label>
+                    <input type="email" id="novoEmail" placeholder="contato@email.com" class="w-full p-2 pixel-input text-lg font-bold">
+                </div>
+
+                <div>
+                    <label for="novoNotas" class="block font-pixel-title text-[10px] mb-1">NOTAS / OBSERVAÇÕES</label>
+                    <textarea id="novoNotas" rows="2" placeholder="Ex: Contato da faculdade / aniversário em outubro..." class="w-full p-2 pixel-input text-base font-bold"></textarea>
+                </div>
+
+                <div class="flex items-center gap-2 pt-2">
+                    <input type="checkbox" id="novoFavorito" class="w-5 h-5 accent-[#47232C] border-2 border-[#27081D] cursor-pointer">
+                    <label for="novoFavorito" class="font-bold text-lg cursor-pointer">Marcar como Contato Favorito ⭐</label>
+                </div>
+
+                <div class="pt-4 border-t-2 border-[#27081D] flex justify-end gap-3">
+                    <button type="button" onclick="fecharModal('modalNovoContato')" class="px-4 py-2 pixel-btn-secondary text-xs font-pixel-title">Cancelar</button>
+                    <button type="submit" class="px-5 py-2 pixel-btn-primary text-xs font-pixel-title">Salvar Registro</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- CONTAINER DE NOTIFICAÇÕES TOAST RETRÔ -->
+    <div id="toastContainer" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- ==========================================================================
+         LÓGICA JAVASCRIPT & GERENCIAMENTO DE ESTADO
+         ========================================================================== -->
+    <script>
+        // Base inicial com os 6 contatos oficiais da Agenda Pessoal Prosa Code
+        let contatos = [
+            {
+                id: 1,
+                nome: "Ana Clara Silva",
+                telefone: "(85) 98822-1100",
+                email: "ana.clara@email.com",
+                tag: "Amigos",
+                favorito: true,
+                notas: "Amiga da turma de Programação Orientada a Objetos."
+            },
+            {
+                id: 2,
+                nome: "Arthur Ramos",
+                telefone: "(85) 99123-4567",
+                email: "arthur.ramos@empresa.com",
+                tag: "Trabalho",
+                favorito: false,
+                notas: "Colega de equipe do projeto de desenvolvimento."
+            },
+            {
+                id: 3,
+                nome: "Aline Castro",
+                telefone: "(85) 98765-4321",
+                email: "aline.castro@gmail.com",
+                tag: "Família",
+                favorito: true,
+                notas: "Prima — aniversário dia 15 de maio."
+            },
+            {
+                id: 4,
+                nome: "Augusto Lima",
+                telefone: "(85) 99988-7766",
+                email: "augusto.lima@outlook.com",
+                tag: "Amigos",
+                favorito: false,
+                notas: "Grupo de estudos do IFCE."
+            },
+            {
+                id: 5,
+                nome: "Bruna Mendes",
+                telefone: "(85) 98544-3322",
+                email: "bruna.mendes@email.com",
+                tag: "Família",
+                favorito: false,
+                notas: "Contato de emergência familiar."
+            },
+            {
+                id: 6,
+                nome: "Bruno Oliveira",
+                telefone: "(85) 99411-2233",
+                email: "bruno.oliveira@empresa.com",
+                tag: "Trabalho",
+                favorito: false,
+                notas: "Coordenador de TI."
+            }
+        ];
+
+        // Estado dos filtros ativos
+        let filtroAtivo = {
+            termoBusca: '',
+            categoria: 'todos',
+            letra: null
+        };
+
+        // Inicializa a interface ao carregar a página
+        window.onload = function () {
+            try {
+                renderizarContatos();
+                atualizarContadores();
+            } catch (erro) {
+                console.error("Erro ao inicializar a agenda:", erro);
+            }
+        };
+
+        /**
+         * Renderiza os grupos alfabéticos e os cartões de contato filtrados
+         */
+        function renderizarContatos() {
+            const container = document.getElementById('contactsListContainer');
+            const emptyState = document.getElementById('emptyState');
+            if (!container || !emptyState) return;
+
+            container.innerHTML = '';
+
+            // Aplica busca por texto, categoria e letra inicial
+            const resultado = contatos.filter(c => {
+                const termo = filtroAtivo.termoBusca.toLowerCase();
+                const matchBusca = !termo || 
+                    c.nome.toLowerCase().includes(termo) || 
+                    c.telefone.toLowerCase().includes(termo) || 
+                    c.tag.toLowerCase().includes(termo) ||
+                    (c.email && c.email.toLowerCase().includes(termo));
+
+                let matchCategoria = true;
+                if (filtroAtivo.categoria === 'favoritos') {
+                    matchCategoria = c.favorito === true;
+                } else if (filtroAtivo.categoria !== 'todos') {
+                    matchCategoria = c.tag === filtroAtivo.categoria;
+                }
+
+                let matchLetra = true;
+                if (filtroAtivo.letra) {
+                    matchLetra = c.nome.toUpperCase().startsWith(filtroAtivo.letra);
+                }
+
+                return matchBusca && matchCategoria && matchLetra;
+            });
+
+            document.getElementById('resultsCount').innerText = `${resultado.length} registro(s)`;
+
+            if (resultado.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
+            }
+
+            // Agrupa os contatos pela inicial do nome
+            const grupos = {};
+            resultado.forEach(c => {
+                const primeiraLetra = c.nome.charAt(0).toUpperCase();
+                if (!grupos[primeiraLetra]) {
+                    grupos[primeiraLetra] = [];
+                }
+                grupos[primeiraLetra].push(c);
+            });
+
+            // Ordena alfabeticamente
+            const letrasOrdenadas = Object.keys(grupos).sort();
+
+            letrasOrdenadas.forEach(letra => {
+                const grupoDiv = document.createElement('div');
+                grupoDiv.className = 'space-y-3';
+
+                grupoDiv.innerHTML = `
+                    <div class="flex items-center gap-2 border-b-2 border-[#27081D] pb-1">
+                        <span class="w-8 h-8 rounded-full bg-[#27081D] text-[#D2E7AA] font-pixel-title text-xs flex items-center justify-center border-2 border-[#A4CA8B]">
+                            ${letra}
+                        </span>
+                        <span class="font-pixel-title text-sm text-[#47232C]">GRUPO ${letra}</span>
+                        <span class="text-xs bg-[#66997B] text-[#27081D] px-2 py-0.5 border border-[#27081D] font-bold">${grupos[letra].length} contato(s)</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                        ${grupos[letra].map(c => criarCardContatoHTML(c)).join('')}
+                    </div>
+                `;
+
+                container.appendChild(grupoDiv);
+            });
+        }
+
+        /**
+         * Gera o HTML de um cartão individual de contato
+         */
+        function criarCardContatoHTML(c) {
+            const tagCores = {
+                'Amigos': 'bg-[#66997B] text-[#27081D]',
+                'Trabalho': 'bg-[#47232C] text-[#D2E7AA]',
+                'Família': 'bg-[#47232C] text-[#D2E7AA]'
+            };
+
+            const corBadge = tagCores[c.tag] || 'bg-[#27081D] text-[#D2E7AA]';
+
+            return `
+                <div class="pixel-card p-3 flex flex-col justify-between relative group">
+                    <div>
+                        <div class="flex justify-between items-start gap-2 mb-2">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-9 h-9 bg-[#27081D] border-2 border-[#A4CA8B] flex items-center justify-center text-[#D2E7AA] font-pixel-title text-xs shrink-0">
+                                    ${c.nome.charAt(0).toUpperCase()}
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-xl text-[#27081D] leading-none">${c.nome}</h3>
+                                    <span class="inline-block text-[10px] font-pixel-title px-2 py-0.5 mt-1 border border-[#27081D] ${corBadge}">
+                                        ${c.tag}
+                                    </span>
+                                </div>
+                            </div>
+                            <button type="button" onclick="toggleFavorito(${c.id})" title="Alternar Favorito" class="text-xl hover:scale-110 transition-transform cursor-pointer">
+                                ${c.favorito ? '⭐' : '☆'}
+                            </button>
+                        </div>
+
+                        <div class="bg-[#A4CA8B]/40 border border-[#27081D]/40 p-2 my-2 space-y-1 text-base">
+                            <p class="font-bold text-[#27081D]">📞 ${c.telefone}</p>
+                            <p class="text-base text-[#27081D]/90 truncate">✉️ ${c.email || 'Sem e-mail cadastrado'}</p>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end gap-2 pt-2 border-t border-[#27081D]/30">
+                        <button type="button" onclick="abrirModalDetalhes(${c.id})" class="px-3 py-1 pixel-btn-secondary text-[11px] font-pixel-title flex items-center gap-1">
+                            👁 Detalhes
+                        </button>
+                        <button type="button" onclick="excluirContato(${c.id})" title="Excluir contato" class="px-2.5 py-1 bg-[#8A242B] text-[#D2E7AA] border-2 border-[#27081D] shadow-[2px_2px_0px_#27081D] hover:bg-red-800 text-xs cursor-pointer">
+                            🗑
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        /**
+         * Atualiza o termo de busca em tempo real
+         */
+        function filtrarContatos() {
+            const input = document.getElementById('searchInput');
+            const clearBtn = document.getElementById('clearSearch');
+            filtroAtivo.termoBusca = input.value.trim();
+
+            if (filtroAtivo.termoBusca.length > 0) {
+                clearBtn.classList.remove('hidden');
+            } else {
+                clearBtn.classList.add('hidden');
+            }
+
+            renderizarContatos();
+        }
+
+        function limparBusca() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('clearSearch').classList.add('hidden');
+            filtroAtivo.termoBusca = '';
+            renderizarContatos();
+        }
+
+        /**
+         * Filtra por categoria selecionada na barra lateral
+         */
+        function filtrarCategoria(categoria) {
+            filtroAtivo.categoria = categoria;
+
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.classList.remove('bg-[#27081D]', 'text-[#D2E7AA]');
+                btn.classList.add('bg-[#A4CA8B]', 'text-[#27081D]');
+            });
+
+            const mapaIds = {
+                'todos': 'cat-todos',
+                'favoritos': 'cat-favoritos',
+                'Amigos': 'cat-amigos',
+                'Família': 'cat-familia',
+                'Trabalho': 'cat-trabalho'
+            };
+
+            const btnAtivo = document.getElementById(mapaIds[categoria]);
+            if (btnAtivo) {
+                btnAtivo.classList.remove('bg-[#A4CA8B]', 'text-[#27081D]');
+                btnAtivo.classList.add('bg-[#27081D]', 'text-[#D2E7AA]');
+            }
+
+            atualizarTituloFiltro();
+            renderizarContatos();
+        }
+
+        /**
+         * Alterna o filtro alfabético na grade de letras
+         */
+        function filtrarLetra(letra) {
+            filtroAtivo.letra = (filtroAtivo.letra === letra) ? null : letra;
+
+            document.querySelectorAll('.letra-btn').forEach(btn => {
+                if (btn.innerText.trim() === filtroAtivo.letra) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            atualizarTituloFiltro();
+            renderizarContatos();
+        }
+
+        function atualizarTituloFiltro() {
+            const titulo = document.getElementById('activeFilterTitle');
+            const partes = [];
+
+            if (filtroAtivo.categoria !== 'todos') {
+                partes.push(filtroAtivo.categoria.toUpperCase());
+            }
+            if (filtroAtivo.letra) {
+                partes.push(`LETRA "${filtroAtivo.letra}"`);
+            }
+
+            titulo.innerText = partes.length > 0
+                ? `EXIBINDO: ${partes.join(' • ')}`
+                : 'EXIBINDO: TODOS OS CONTATOS';
+        }
+
+        function resetarFiltros() {
+            filtroAtivo = { termoBusca: '', categoria: 'todos', letra: null };
+            document.getElementById('searchInput').value = '';
+            document.getElementById('clearSearch').classList.add('hidden');
+            document.querySelectorAll('.letra-btn').forEach(btn => btn.classList.remove('active'));
+            filtrarCategoria('todos');
+        }
+
+        /**
+         * Recalcula os contadores dinâmicos das categorias
+         */
+        function atualizarContadores() {
+            document.getElementById('count-todos').innerText = contatos.length;
+            document.getElementById('count-favoritos').innerText = contatos.filter(c => c.favorito).length;
+            document.getElementById('count-amigos').innerText = contatos.filter(c => c.tag === 'Amigos').length;
+            document.getElementById('count-familia').innerText = contatos.filter(c => c.tag === 'Família').length;
+            document.getElementById('count-trabalho').innerText = contatos.filter(c => c.tag === 'Trabalho').length;
+        }
+
+        /**
+         * Alterna status de favorito de um contato
+         */
+        function toggleFavorito(id) {
+            const contato = contatos.find(c => c.id === id);
+            if (!contato) return;
+
+            contato.favorito = !contato.favorito;
+            renderizarContatos();
+            atualizarContadores();
+            mostrarToast(
+                contato.favorito
+                    ? `⭐ ${contato.nome} adicionado aos favoritos!`
+                    : `☆ ${contato.nome} removido dos favoritos.`
+            );
+        }
+
+        /**
+         * Abre o modal com detalhes completos do contato
+         */
+        function abrirModalDetalhes(id) {
+            const c = contatos.find(item => item.id === id);
+            if (!c) return;
+
+            const body = document.getElementById('modalDetalhesBody');
+            body.innerHTML = `
+                <div class="flex items-center gap-3 pb-3 border-b-2 border-[#27081D]">
+                    <div class="w-12 h-12 bg-[#27081D] text-[#D2E7AA] font-pixel-title text-base flex items-center justify-center border-2 border-[#A4CA8B] shrink-0">
+                        ${c.nome.charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-2xl leading-none">${c.nome} ${c.favorito ? '⭐' : ''}</h4>
+                        <span class="inline-block mt-1.5 px-2 py-0.5 bg-[#47232C] text-[#D2E7AA] font-pixel-title text-[10px] border border-[#27081D]">${c.tag}</span>
+                    </div>
+                </div>
+                <div class="space-y-2 text-lg">
+                    <p><strong>📞 Telefone:</strong> ${c.telefone}</p>
+                    <p><strong>✉️ E-mail:</strong> ${c.email || 'Não informado'}</p>
+                    <div class="bg-[#A4CA8B]/50 border-2 border-[#27081D] p-3 mt-2">
+                        <p class="font-pixel-title text-[10px] mb-1">📝 NOTAS:</p>
+                        <p class="text-base leading-snug">${c.notas || 'Nenhuma observação registrada.'}</p>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('modalDetalhes').classList.remove('hidden');
+        }
+
+        function abrirModalNovoContato() {
+            document.getElementById('formNovoContato').reset();
+            document.getElementById('modalNovoContato').classList.remove('hidden');
+        }
+
+        function fecharModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        /**
+         * Salva um novo contato a partir do formulário do modal
+         */
+        function salvarNovoContato(event) {
+            event.preventDefault();
+            try {
+                const nome = document.getElementById('novoNome').value.trim();
+                const telefone = document.getElementById('novoTelefone').value.trim();
+                const tag = document.getElementById('novoTag').value;
+                const email = document.getElementById('novoEmail').value.trim();
+                const notas = document.getElementById('novoNotas').value.trim();
+                const favorito = document.getElementById('novoFavorito').checked;
+
+                if (!nome || !telefone) return;
+
+                const novo = {
+                    id: Date.now(),
+                    nome,
+                    telefone,
+                    email,
+                    tag,
+                    favorito,
+                    notas
+                };
+
+                contatos.push(novo);
+                fecharModal('modalNovoContato');
+                renderizarContatos();
+                atualizarContadores();
+                mostrarToast(`✅ Contato "${nome}" salvo com sucesso!`);
+            } catch (erro) {
+                console.error("Erro ao salvar contato:", erro);
+            }
+        }
+
+        /**
+         * Remove um contato da lista e exibe notificação retrô
+         */
+        function excluirContato(id) {
+            const contato = contatos.find(c => c.id === id);
+            if (!contato) return;
+
+            contatos = contatos.filter(c => c.id !== id);
+            renderizarContatos();
+            atualizarContadores();
+            mostrarToast(`🗑 Contato "${contato.nome}" removido.`);
+        }
+
+        /**
+         * Exibe notificação estilo toast retrô no canto inferior direito
+         */
+        function mostrarToast(mensagem) {
+            const container = document.getElementById('toastContainer');
+            if (!container) return;
+
+            const toast = document.createElement('div');
+            toast.className = 'bg-[#27081D] text-[#D2E7AA] border-2 border-[#A4CA8B] shadow-[4px_4px_0px_#47232C] px-4 py-2 text-base font-bold';
+            toast.innerText = mensagem;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

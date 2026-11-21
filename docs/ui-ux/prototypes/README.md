@@ -1,6 +1,6 @@
 # 🎨 Protótipos Interativos de UI/UX — Agenda de Contatos
 
-Este diretório reúne os **protótipos funcionais de alta fidelidade** desenvolvidos para validar o layout, o fluxo de navegação e a identidade visual em *pixel art* 16-bit do **Módulo 02 (`02-agenda-contatos.fxml`)** antes e durante sua implementação em **Java SE / JavaFX**.
+Este diretório reúne os **protótipos funcionais de alta fidelidade** desenvolvidos para validar o layout, o fluxo de navegação e a identidade visual em *pixel art* 16-bit do **Módulo 02 (`prosa_code_agenda_de_contatos_16_bit.html`)** antes e durante sua implementação em **Java SE / JavaFX**.
 
 A prototipação em HTML5, Tailwind CSS e JavaScript puro permite testar interações reais diretamente no navegador, sem a necessidade de compilar o projeto Java ou abrir o Scene Builder a cada ajuste visual.
 
@@ -66,3 +66,5 @@ Por ser um arquivo *standalone* sem dependências de build local:
 * **Disciplina:** Programação Orientada a Objetos (POO)
 * **Docente:** Prof. Roger Moura Sarmento
 * **Equipe Prosa Code:** Agatha (`Batmilly`), Eduardo (`EduSousaAPontes`), Felipe Chen (`felipechen14-droid`), Leandro (`le4ndror`) e Rayssa (`Rayssa-py`)
+
+* (`Autora: Rayssa`)
